@@ -42,17 +42,15 @@ def extract_patient_info_from_pdf(pdf_content: bytes) -> Optional[PatientInfo]:
         # If no text extracted, try OCR for image-based PDFs
         if not text.strip():
             if OCR_AVAILABLE:
-                print("📄 No text found in PDF. Using OCR to extract from images...")
+                print("📄 Extracting patient info using OCR...")
                 ocr_text = extract_text_with_ocr(pdf_content)
                 if ocr_text:
-                    print(f"✅ OCR extracted {len(ocr_text)} characters of text")
-                    
                     # Extract patient information from OCR text
                     first_name = extract_first_name(ocr_text)
                     last_name = extract_last_name(ocr_text)
                     date_of_birth = extract_date_of_birth(ocr_text)
                     
-                    print(f"👤 Extracted Patient Info: {first_name} {last_name}, DOB: {date_of_birth}")
+                    print(f"✅ Patient Info: {first_name} {last_name}, DOB: {date_of_birth}")
                     
                     if first_name and last_name and date_of_birth:
                         return PatientInfo(
@@ -61,9 +59,9 @@ def extract_patient_info_from_pdf(pdf_content: bytes) -> Optional[PatientInfo]:
                             date_of_birth=date_of_birth
                         )
                 else:
-                    print("❌ OCR failed to extract text from PDF")
+                    print("❌ Failed to extract patient info from PDF")
             else:
-                print("❌ OCR not available. Install tesseract and poppler for image-based PDF support")
+                print("❌ OCR not available for image-based PDFs")
             return None
         
         # Extract patient information using regex patterns
@@ -72,6 +70,7 @@ def extract_patient_info_from_pdf(pdf_content: bytes) -> Optional[PatientInfo]:
         date_of_birth = extract_date_of_birth(text)
         
         if first_name and last_name and date_of_birth:
+            print(f"✅ Patient Info: {first_name} {last_name}, DOB: {date_of_birth}")
             return PatientInfo(
                 first_name=first_name,
                 last_name=last_name,
@@ -188,19 +187,15 @@ def extract_text_with_ocr(pdf_content: bytes) -> Optional[str]:
     """
     try:
         # Convert PDF pages to images
-        print("🔄 Converting PDF pages to images...")
         images = convert_from_bytes(pdf_content, dpi=300)
-        print(f"📷 Converted {len(images)} pages to images")
         
         # Extract text from each image using OCR
         all_text = ""
-        for i, image in enumerate(images):
-            print(f"🔍 Processing page {i+1} with OCR...")
+        for image in images:
             # Configure OCR for better accuracy
             custom_config = r'--oem 3 --psm 6'
             page_text = pytesseract.image_to_string(image, config=custom_config)
             all_text += page_text + "\n"
-            print(f"   Page {i+1}: {len(page_text)} characters extracted")
         
         return all_text
         
