@@ -1,112 +1,154 @@
-# GenHealth REST API
+# GenHealth API - REST API with PDF OCR and Activity Logging
 
-A FastAPI-based REST API for managing medical orders with PDF document processing and OCR capabilities.
+## 🚀 **Project Overview**
+I built a complete REST API that extracts patient information from PDF documents using OCR technology and logs all user activity. The API is deployed and publicly accessible.
 
-## Features
+## 🌐 **Live Demo**
+- **API URL**: https://web-production-f830.up.railway.app
+- **Documentation**: https://web-production-f830.up.railway.app/docs
+- **GitHub**: https://github.com/sanskrutimahajan/genHealth
 
-- **CRUD Operations**: Full Create, Read, Update, Delete operations for Order entities
-- **PDF Processing**: Upload PDF documents and extract patient information using OCR
-- **Database Persistence**: SQLite database with automatic table creation
-- **Activity Logging**: Comprehensive logging of all API interactions
-- **Interactive Documentation**: Auto-generated Swagger UI at `/docs`
+## ✅ **Requirements Met**
 
-## Project Structure
+### 1. CRUD Operations for Orders
+- **GET** `/orders/` - List all orders
+- **POST** `/orders/` - Create new order
+- **GET** `/orders/{id}` - Get specific order
+- **PUT** `/orders/{id}` - Update order
+- **DELETE** `/orders/{id}` - Delete order
 
+### 2. Database Persistence
+- **SQLite** for local development
+- **PostgreSQL** for production deployment
+- **SQLAlchemy ORM** for database operations
+
+### 3. PDF Upload & Patient Info Extraction
+- **POST** `/upload/` - Upload PDF files
+- **OCR Technology** - Extracts text from image-based PDFs
+- **Patient Data** - Extracts first name, last name, and date of birth
+- **Automatic Order Creation** - Creates order from extracted data
+
+### 4. Activity Logging
+- **Middleware** - Logs all HTTP requests automatically
+- **Database Storage** - All activity stored in `activity_logs` table
+- **GET** `/activity-logs/` - View all logged activities
+
+### 5. Public Deployment
+- **Railway Platform** - Deployed and publicly accessible
+- **HTTPS Enabled** - Secure communication
+- **Auto-scaling** - Handles traffic automatically
+
+## 🛠️ **Technologies Used**
+
+### Backend Framework
+- **FastAPI** - Modern Python web framework
+- **Uvicorn** - ASGI server for running FastAPI
+
+### Database & ORM
+- **SQLAlchemy** - Python ORM for database operations
+- **SQLite** - Local development database
+- **PostgreSQL** - Production database
+
+### PDF Processing
+- **PyPDF2** - PDF text extraction
+- **pytesseract** - OCR for image-based PDFs
+- **pdf2image** - Convert PDF pages to images
+- **Pillow** - Image processing for OCR
+
+### Data Validation
+- **Pydantic** - Data validation and serialization
+
+### Deployment
+- **Railway** - Cloud deployment platform
+- **GitHub** - Version control and CI/CD
+
+## 📁 **Project Structure**
 ```
 genHealth/
 ├── app/
-│   ├── __init__.py          # Python package marker
-│   ├── main.py              # FastAPI application and endpoints
-│   ├── database.py          # Database connection and session management
-│   ├── models.py            # SQLAlchemy ORM models
-│   ├── schemas.py           # Pydantic models for validation
-│   ├── crud.py              # Database operations (CRUD)
-│   ├── utils.py             # PDF processing and OCR utilities
-│   └── logger.py            # Activity logging middleware
-├── requirements.txt         # Python dependencies
-├── README.md               # This file
-└── DEPLOYMENT.md           # Deployment instructions
+│   ├── __init__.py
+│   ├── main.py          # FastAPI app and endpoints
+│   ├── database.py      # Database connection setup
+│   ├── models.py        # SQLAlchemy models
+│   ├── schemas.py       # Pydantic validation schemas
+│   ├── crud.py          # Database operations
+│   ├── utils.py         # PDF processing and OCR
+│   └── logger.py        # Activity logging middleware
+├── requirements.txt     # Python dependencies
+├── README.md           # Project documentation
+├── run.py              # Startup script
+└── Procfile            # Railway deployment config
 ```
 
-## API Endpoints
+## 🎯 **Key Features**
 
-### Core Endpoints
-- `GET /` - Health check and API info
-- `POST /orders/` - Create a new order
-- `GET /orders/` - Get all orders
-- `GET /orders/{order_id}` - Get specific order
-- `PUT /orders/{order_id}` - Update order
-- `DELETE /orders/{order_id}` - Delete order
+### OCR Implementation
+- Automatically detects image-based PDFs
+- Converts PDF pages to high-resolution images
+- Uses Tesseract OCR to extract text
+- Falls back gracefully if OCR fails
 
-### PDF Processing
-- `POST /upload/` - Upload PDF and extract patient information
+### Activity Logging
+- Middleware captures all HTTP requests
+- Stores request details, timestamps, and responses
+- No manual logging required
 
-### Activity Logs
-- `GET /activity-logs/` - Get all activity logs
-- `GET /activity-logs/order/{order_id}` - Get logs for specific order
+### Error Handling
+- Comprehensive error messages
+- Graceful fallbacks for PDF processing
+- Proper HTTP status codes
 
-## Setup and Installation
+## 🚀 **How to Run Locally**
 
-1. **Install dependencies**:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/sanskrutimahajan/genHealth.git
+   cd genHealth
+   ```
+
+2. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Install system dependencies** (for OCR):
+3. **Run the API**
    ```bash
-   brew install tesseract poppler  # macOS
+   python run.py
    ```
 
-3. **Run the application**:
-   ```bash
-   python -m app.main
-   ```
-
-4. **Access the API**:
+4. **Access the API**
    - API: http://localhost:8000
-   - Documentation: http://localhost:8000/docs
+   - Docs: http://localhost:8000/docs
 
-## Key Technologies
+## 📊 **API Endpoints**
 
-- **FastAPI**: Modern, fast web framework for building APIs
-- **SQLAlchemy**: SQL toolkit and ORM for database operations
-- **Pydantic**: Data validation using Python type annotations
-- **PyPDF2**: PDF text extraction
-- **Tesseract OCR**: Optical Character Recognition for image-based PDFs
-- **SQLite**: Lightweight database for data persistence
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | API health check and info |
+| GET | `/docs` | Interactive API documentation |
+| GET | `/orders/` | List all orders |
+| POST | `/orders/` | Create new order |
+| GET | `/orders/{id}` | Get specific order |
+| PUT | `/orders/{id}` | Update order |
+| DELETE | `/orders/{id}` | Delete order |
+| POST | `/upload/` | Upload PDF and extract patient info |
+| GET | `/activity-logs/` | View all activity logs |
 
-## Database Models
+## 🎯 **Demo Instructions**
 
-### Order
-- `id`: Primary key
-- `first_name`: Patient's first name
-- `last_name`: Patient's last name
-- `date_of_birth`: Patient's date of birth
-- `created_at`: Timestamp when order was created
-- `updated_at`: Timestamp when order was last updated
+1. **Visit the live API**: https://web-production-f830.up.railway.app/docs
+2. **Upload a PDF** using the `/upload/` endpoint
+3. **Watch the OCR extraction** in real-time
+4. **Check the created order** in `/orders/`
+5. **View activity logs** in `/activity-logs/`
 
-### ActivityLog
-- `id`: Primary key
-- `timestamp`: When the activity occurred
-- `method`: HTTP method (GET, POST, etc.)
-- `endpoint`: API endpoint accessed
-- `action`: Description of the action
-- `order_id`: Associated order (if applicable)
-- `details`: Additional details about the activity
+## 💡 **Technical Highlights**
 
-## PDF Processing Flow
+- **Modern FastAPI** with automatic OpenAPI documentation
+- **Advanced OCR** for handling scanned PDFs
+- **Comprehensive logging** for audit trails
+- **Production-ready** deployment on Railway
+- **Clean, maintainable code** structure
+- **Error handling** and graceful fallbacks
 
-1. **Upload**: Client uploads PDF via `/upload/` endpoint
-2. **Text Extraction**: Attempt to extract text using PyPDF2
-3. **OCR Fallback**: If no text found, use Tesseract OCR to process images
-4. **Pattern Matching**: Apply regex patterns to extract patient information
-5. **Order Creation**: Create order in database with extracted data
-6. **Activity Logging**: Log the upload activity
-
-## Deployment
-
-See `DEPLOYMENT.md` for detailed deployment instructions to various platforms including Railway, Render, Heroku, and DigitalOcean.
-
-## Testing
-
-The API includes comprehensive error handling and validation. Test the endpoints using the interactive Swagger UI at `/docs`. 
+The API successfully demonstrates all required functionality and is ready for production use. 
